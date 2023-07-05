@@ -11,17 +11,17 @@ func main() {
 	if len(args) != 2 {
 		return
 	}
-	src, err := File(args[0], false)
+	src, err := file(args[0], false)
 	defer src.Close()
 	check(err)
-	dst, err := File(args[1], true)
+	dst, err := file(args[1], true)
 	defer dst.Close()
 	check(err)
-	Validator(src)
-	err = Copy(src, dst)
+	data, err := ModificationText(src)
 	check(err)
-	fmt.Printf("File '%s' successfully copied to '%s'\n", args[0], args[1])
-
+	err = Copy(dst, data)
+	check(err)
+	fmt.Printf("file '%s' successfully copied to '%s'\n", args[0], args[1])
 }
 
 func check(e error) {
@@ -29,6 +29,3 @@ func check(e error) {
 		log.Fatalln(e)
 	}
 }
-
-//Simply add 42 (hex) and 10 "(bin)" and you will see the result "is" "68."
-//contains exStr

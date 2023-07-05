@@ -10,8 +10,8 @@ var (
 	ErrFileNotFound = errors.New("file not found")
 )
 
-func File(name string, isDstFile bool) (*os.File, error) {
-	exist, err := IsExist(name)
+func file(name string, isDstFile bool) (*os.File, error) {
+	exist, err := exist(name)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func File(name string, isDstFile bool) (*os.File, error) {
 	return src, nil
 }
 
-func IsExist(FileName string) (bool, error) {
+func exist(FileName string) (bool, error) {
 	_, err := os.Stat(FileName)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -43,10 +43,33 @@ func IsExist(FileName string) (bool, error) {
 	return true, nil
 }
 
-func Copy(srcFile *os.File, destFile *os.File) error {
-	_, err := io.Copy(destFile, srcFile)
+func Copy(destFile *os.File, data []byte) error {
+	//// To prevent situation where we moved our reading
+	//// cursor, we adjust it to the beginning of the file
+	//_, err := srcFile.Seek(0, io.SeekStart)
+	//if err != nil {
+	//	return err
+	//}
+
+	err := destFile.Truncate(0)
+	if err != nil {
+		return err
+	}
+
+	// Rewind the file cursor to the beginning
+	_, err = destFile.Seek(0, io.SeekStart)
+	if err != nil {
+		return err
+	}
+
+	// Write the newBytes to the destination file
+	_, err = destFile.Write(data)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func DelAtInd(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
 }
