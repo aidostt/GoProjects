@@ -43,7 +43,7 @@ func exist(FileName string) (bool, error) {
 	return true, nil
 }
 
-func Copy(destFile *os.File, data []byte) error {
+func copyData(destFile *os.File, data []byte) error {
 	//// To prevent situation where we moved our reading
 	//// cursor, we adjust it to the beginning of the file
 	//_, err := srcFile.Seek(0, io.SeekStart)

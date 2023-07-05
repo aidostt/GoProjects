@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-reloaded.aidostt.net/internal/command"
 	"log"
 	"os"
 )
@@ -17,9 +18,10 @@ func main() {
 	dst, err := file(args[1], true)
 	defer dst.Close()
 	check(err)
-	data, err := ModificationText(src)
+	data, err := command.Check(src)
+	//TODO: add error handling
 	check(err)
-	err = Copy(dst, data)
+	err = copyData(dst, data)
 	check(err)
 	fmt.Printf("file '%s' successfully copied to '%s'\n", args[0], args[1])
 }
