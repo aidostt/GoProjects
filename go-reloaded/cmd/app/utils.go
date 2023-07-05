@@ -62,14 +62,10 @@ func Copy(destFile *os.File, data []byte) error {
 		return err
 	}
 
-	// Write the newBytes to the destination file
+	// Write the data to the destination file
 	_, err = destFile.Write(data)
 	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func DelAtInd(s []string, index int) []string {
-	return append(s[:index], s[index+1:]...)
 }

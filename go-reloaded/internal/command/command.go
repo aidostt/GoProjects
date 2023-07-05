@@ -1,18 +1,11 @@
-package main
+package command
 
 import (
-	"errors"
 	"os"
-	"strconv"
 	"strings"
 )
 
-var (
-	commands        = map[string]string{"(hex)": "", "(bin)": "", "(up)": "", "(low)": "", "(cap)": ""}
-	ErrCommNotFound = errors.New("no such command")
-)
-
-func ModificationText(file *os.File) ([]byte, error) {
+func Check(file *os.File) ([]byte, error) {
 	bytes := make([]byte, 2056)
 	n, err := file.Read(bytes)
 	if err != nil {
@@ -36,25 +29,9 @@ func ModificationText(file *os.File) ([]byte, error) {
 			default:
 				return nil, ErrCommNotFound
 			}
-			words = DelAtInd(words, i)
+			words = delAtInd(words, i)
 		}
 	}
 	output := strings.Join(words, " ")
 	return []byte(output), nil
-}
-
-func hex(s string) string {
-	n, err := strconv.ParseInt(s, 16, 64)
-	if err != nil {
-		return ""
-	}
-	return strconv.Itoa(int(n))
-}
-
-func bin(s string) string {
-	n, err := strconv.ParseInt(s, 2, 64)
-	if err != nil {
-		return ""
-	}
-	return strconv.Itoa(int(n))
 }
