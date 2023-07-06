@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func Check(words []string) ([]byte, error) {
+func Check(words []string) ([]string, error) {
 	for i, v := range words {
 		if _, exist := commands[v]; exist {
 			switch v {
@@ -55,6 +55,5 @@ func Check(words []string) ([]byte, error) {
 			words = delAtInd(words, i)
 		}
 	}
-	output := strings.Join(words, " ")
-	return []byte(output), nil
+	return words, nil
 }
