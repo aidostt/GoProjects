@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"strings"
 )
 
 var (
@@ -43,7 +44,7 @@ func exist(FileName string) (bool, error) {
 	return true, nil
 }
 
-func copyData(destFile *os.File, data []byte) error {
+func copyDataTo(destFile *os.File, data []byte) error {
 	//// To prevent situation where we moved our reading
 	//// cursor, we adjust it to the beginning of the file
 	//_, err := srcFile.Seek(0, io.SeekStart)
@@ -68,4 +69,13 @@ func copyData(destFile *os.File, data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func copyDataFrom(destFile *os.File) ([]string, error) {
+	bytes := make([]byte, 2056)
+	n, err := destFile.Read(bytes)
+	if err != nil {
+		return nil, err
+	}
+	return strings.Split(string(bytes[:n]), " "), nil
 }
