@@ -1,18 +1,10 @@
 package command
 
 import (
-	"os"
 	"strings"
 )
 
-func Check(file *os.File) ([]byte, error) {
-	bytes := make([]byte, 2056)
-	n, err := file.Read(bytes)
-	if err != nil {
-		return nil, err
-	}
-	words := strings.Split(string(bytes[:n]), " ")
-
+func Check(words []string) ([]byte, error) {
 	for i, v := range words {
 		if _, exist := commands[v]; exist {
 			switch v {
@@ -32,7 +24,10 @@ func Check(file *os.File) ([]byte, error) {
 			words = delAtInd(words, i)
 		}
 	}
-	num := 0
+	var (
+		num int
+		err error
+	)
 	for i, v := range words {
 		if _, exist := advCommands[v]; exist {
 			if i+1 > len(words)-1 {
