@@ -32,7 +32,7 @@ func delAtInd(s []string, index int) []string {
 	return append(s[:index], s[index+1:]...)
 }
 
-func GetNum(s string) (output int, err error) {
+func number(s string) (output int, err error) {
 	//Since in this function we expect to get the
 	//string in format of "digit)", we need to get
 	//rid of last bracket.

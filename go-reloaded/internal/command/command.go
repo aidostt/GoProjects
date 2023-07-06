@@ -38,7 +38,7 @@ func Check(file *os.File) ([]byte, error) {
 			if i+1 > len(words)-1 {
 				return nil, ErrInvalidInput
 			}
-			num, err = GetNum(words[i+1])
+			num, err = number(words[i+1])
 			if err != nil {
 				return nil, ErrInvalidInput
 			}
