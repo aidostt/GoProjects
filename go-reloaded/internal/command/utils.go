@@ -2,7 +2,6 @@ package command
 
 import (
 	"errors"
-	"regexp"
 	"strconv"
 )
 
@@ -34,23 +33,13 @@ func delAtInd(s []string, index int) []string {
 }
 
 func GetNum(s string) (output int, err error) {
-	//FIXME: 12d 1d2. Only acceptable input should be "...digit)"
-	expr := regexp.MustCompile(`\d+`)
-	match := expr.FindString(s)
-	if match == "" {
-		return 0, ErrInvalidInput
-	}
-	output, err = strconv.Atoi(match)
-	//if len(match) == 0 {
-	//	return 0, ErrInvalidInput
-	//}
-	//fmt.Println(match)
-	//output, err = strconv.Atoi(strings.Join(match, ""))
+	//Since in this function we expect to get the
+	//string in format of "digit)", we need to get
+	//rid of last bracket.
+	s = s[:len(s)-1]
+	output, err = strconv.Atoi(s)
 	if err != nil {
-		return 0, err
+		return 0, ErrInvalidInput
 	}
 	return
 }
-
-//Example buzuk 30 books (cap,
-//1
