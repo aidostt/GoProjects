@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	commands        = map[string]string{"(hex)": "", "(bin)": "", "(up)": "", "(low)": "", "(cap)": ""}
-	advCommands     = map[string]string{"(up,": "", "(low,": "", "(cap,": ""}
+	commands        = map[string]bool{"(hex)": false, "(bin)": false, "(up)": false, "(low)": false, "(cap)": false}
+	advCommands     = map[string]bool{"(up,": false, "(low,": false, "(cap,": false}
 	ErrCommNotFound = errors.New("no such command")
 	ErrInvalidInput = errors.New("invalid input")
 )
@@ -29,7 +29,7 @@ func bin(s string) string {
 }
 
 func delAtInd(s []string, index int) []string {
-	return append(s[:index], s[index+1:]...)
+	return append((s)[:index], (s)[index+1:]...)
 }
 
 func number(s string) (output int, err error) {
