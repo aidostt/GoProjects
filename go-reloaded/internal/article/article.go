@@ -4,8 +4,8 @@ import "go-reloaded.aidostt.net/internal/command"
 
 var (
 	vowels = map[rune]rune{
-		'a': ' ', 'e': ' ', 'i': ' ', 'o': ' ', 'u': ' ',
-		'A': ' ', 'E': ' ', 'I': ' ', 'O': ' ', 'U': ' ',
+		'a': ' ', 'e': ' ', 'i': ' ', 'o': ' ', 'u': ' ', 'h': ' ',
+		'A': ' ', 'E': ' ', 'I': ' ', 'O': ' ', 'U': ' ', 'H': ' ',
 	}
 )
 
