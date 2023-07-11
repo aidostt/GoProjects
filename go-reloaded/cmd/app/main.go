@@ -33,3 +33,5 @@ func check(e error) {
 		log.Fatalln(e)
 	}
 }
+
+//TODO: There it was (up) (low) An Bmazing rock!
