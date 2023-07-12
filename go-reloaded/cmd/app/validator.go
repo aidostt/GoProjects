@@ -8,14 +8,12 @@ import (
 )
 
 func validate(srcData []string) (output []byte, err error) {
+	srcData = deleteNilVal(srcData)
 	data, err := article.Check(srcData)
 	err = punctuation.Check(&data)
 	if err != nil {
 		//TODO: add error handling
 		return
-	}
-	if err != nil {
-		return nil, command.ErrInvalidInput
 	}
 	err = command.Check(&data)
 	if err != nil {

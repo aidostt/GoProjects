@@ -79,3 +79,10 @@ func copyDataFrom(destFile *os.File) ([]string, error) {
 	}
 	return strings.Split(string(bytes[:n]), " "), nil
 }
+
+func deleteNilVal(s []string) []string {
+	for len(s) > 0 && s[0] == "" {
+		s = append((s)[:0], (s)[+1:]...)
+	}
+	return s
+}
