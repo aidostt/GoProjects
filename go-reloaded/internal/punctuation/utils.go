@@ -26,6 +26,7 @@ func addSpaceAtInd(s *string, i int) {
 	rr[i] = ' '
 	*s = string(rr)
 }
-func concateSigns() (word string) {
-	return
+
+func delAtInd(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
 }
