@@ -1,14 +1,20 @@
 package punctuation
 
 import (
+	"fmt"
 	"go-reloaded.aidostt.net/internal/command"
 )
 
 func Check(words *[]string) error {
-	var exist bool
+	var (
+		exist bool
+		arr   []string
+	)
 	//TODO: add command that will isolate all commands,
 	//TODO: if they have any punctuation before and after
-	for i := range *words {
+	for i := 0; i < len(*words); i++ {
+		//fmt.Println(i)
+		//fmt.Println(*words)
 		_, exist = regExp[rune((*words)[i][0])]
 		if exist {
 			if i <= 0 {
@@ -29,14 +35,26 @@ func Check(words *[]string) error {
 				i--
 			}
 		}
+		//TODO: receive an array and put it into original array
+		if arr = delimitWord((*words)[i]); len(arr) > 1 {
+			temp := make([]string, len(arr)+len(*words)-1)
+			fmt.Printf("stage 1 ->%v\n", temp)
 
-		delimitWord(&(*words)[i])
-		//switch case: identify when call right function
+			temp = append((*words)[:i], arr...)
+			fmt.Printf("stage 2 ->%v\n", temp)
+
+			temp = append(temp, (*words)[i+1:]...)
+			fmt.Printf("stage 3 ->%v\n", temp)
+			fmt.Printf("words -> %v\n", (*words)[i+1:])
+			*words = temp
+			temp = nil
+			i += len(arr) - 1
+			//paste new arr into *words
+			//increase the i position by len of the new array
+		}
 	}
 	return nil
 }
-
-//string!!!! buzuk
 
 //example string:
 //case 1: buzuk is example ...  buzuk is example ?! --> buzuk is example... buzuk is example?!
