@@ -6,16 +6,22 @@ import (
 
 var regExp = map[rune]rune{
 	'!': ' ', '?': ' ', '.': ' ', ',': ' ',
-	':': ' ', ';': ' ',
+	':': ' ', ';': ' ', '"': ' ', '\'': ' ',
 }
 
-func delimitWord(word string) (out []string) {
+func delimitWord(word string, SCnt *int, DCnt *int) (out []string) {
 	var (
 		exist, sign bool
 	)
 	prevInd := 0
 	rr := []rune(strings.TrimSpace(word))
 	for i := 0; i < len(rr); i++ {
+		if rr[i] == '\'' {
+			*SCnt++
+		}
+		if rr[i] == '"' {
+			*DCnt++
+		}
 		_, exist = regExp[rr[i]]
 		if exist {
 			sign = true

@@ -1,20 +1,25 @@
 package punctuation
 
 import (
-	"fmt"
 	"go-reloaded.aidostt.net/internal/command"
 )
 
 func Check(words *[]string) error {
 	var (
-		exist bool
-		arr   []string
+		exist      bool
+		arr        []string
+		DQuouteCnt int
+		SQuouteCnt int
 	)
 	//TODO: add command that will isolate all commands,
 	//TODO: if they have any punctuation before and after
 	for i := 0; i < len(*words); i++ {
-		//fmt.Println(i)
-		//fmt.Println(*words)
+		if (*words)[i] == "\"" {
+			DQuouteCnt++
+		}
+		if (*words)[i] == "'" {
+			SQuouteCnt++
+		}
 		_, exist = regExp[rune((*words)[i][0])]
 		if exist {
 			if i <= 0 {
@@ -36,22 +41,21 @@ func Check(words *[]string) error {
 			}
 		}
 		//TODO: receive an array and put it into original array
-		if arr = delimitWord((*words)[i]); len(arr) > 1 {
-			temp := make([]string, len(arr)+len(*words)-1)
-			fmt.Printf("stage 1 ->%v\n", temp)
 
-			temp = append((*words)[:i], arr...)
-			fmt.Printf("stage 2 ->%v\n", temp)
+		if arr = delimitWord((*words)[i], &SQuouteCnt, &DQuouteCnt); len(arr) > 1 {
+			// Make room for the new elements by extending the slice.
+			*words = append(*words, make([]string, len(arr)-1)...)
 
-			temp = append(temp, (*words)[i+1:]...)
-			fmt.Printf("stage 3 ->%v\n", temp)
-			fmt.Printf("words -> %v\n", (*words)[i+1:])
-			*words = temp
-			temp = nil
+			// Copy the elements from the end to the new position.
+			copy((*words)[i+len(arr):], (*words)[i+1:])
+
+			// Copy the elements from arr into words at the appropriate position.
+			copy((*words)[i:i+len(arr)], arr)
 			i += len(arr) - 1
-			//paste new arr into *words
-			//increase the i position by len of the new array
 		}
+	}
+	if SQuouteCnt%2 != 0 || DQuouteCnt%2 != 0 {
+		return command.ErrInvalidInput
 	}
 	return nil
 }
