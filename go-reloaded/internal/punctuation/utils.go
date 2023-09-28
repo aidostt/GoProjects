@@ -28,7 +28,6 @@ func delimitWord(word string, SCnt *int, DCnt *int) (out []string) {
 		}
 		if sign && !exist {
 			out = append(out, string(rr[prevInd:i])) // Append the delimited word.
-			//addSpaceAtInd(&rr, i)                    // Modify the rune slice directly.
 			sign = false
 			prevInd = i
 		}
