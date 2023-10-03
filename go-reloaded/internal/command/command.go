@@ -6,8 +6,7 @@ import (
 
 func Check(words *[]string) error {
 	var exist bool
-	l := len(*words)
-	for i := l - 1; i >= 0; i-- {
+	for i := 0; i < len(*words); i++ {
 		if _, exist = commands[(*words)[i]]; exist {
 			switch (*words)[i] {
 			case "(hex)":
@@ -25,14 +24,13 @@ func Check(words *[]string) error {
 			}
 			*words = delAtInd(*words, i)
 			i--
-			l--
 		}
 	}
 	var (
 		num int
 		err error
 	)
-	for i := l - 1; i >= 0; i-- {
+	for i := 0; i < len(*words); i++ {
 		if _, exist := advCommands[(*words)[i]]; exist {
 			if i+1 > len(*words)-1 {
 				return ErrInvalidInput
@@ -57,10 +55,8 @@ func Check(words *[]string) error {
 			}
 			*words = delAtInd(*words, i)
 			i--
-			l--
 			*words = delAtInd(*words, i)
 			i--
-			l--
 		}
 	}
 	return nil

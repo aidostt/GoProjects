@@ -43,3 +43,5 @@ func number(s string) (output int, err error) {
 	}
 	return
 }
+
+//TODO: handle multiple commands in a row something (up) (low) (cap)
