@@ -6,12 +6,13 @@ import (
 
 func Check(words *[]string) error {
 	var (
-		exist      bool
-		arr        []string
-		DQuouteCnt int
-		SQuouteCnt int
-		s          string
+		exist                  bool
+		arr                    []string
+		DQuouteCnt, SQuouteCnt int
+		//s                      string
 	)
+	//TODO: handle advanced commands with punctuation inside and in the end of it
+	//TODO: handle string: something very !(cap, 2)
 	for i := 0; i < len(*words); i++ {
 		if (*words)[i] == "\"" {
 			DQuouteCnt++
@@ -20,32 +21,6 @@ func Check(words *[]string) error {
 			SQuouteCnt++
 		}
 
-		if (*words)[i][0] == '(' {
-			_, exist = regExp[rune((*words)[i][len((*words)[i])-1])]
-			if exist {
-				if i <= 0 {
-					return command.ErrInvalidInput
-				}
-				for exist {
-					s += string(rune((*words)[i][len((*words)[i])-1]))
-					(*words)[i] = (*words)[i][:len((*words)[i])-1]
-					_, exist = regExp[rune((*words)[i][len((*words)[i])-1])]
-				}
-				if (*words)[i-1][0] == '(' {
-					for i >= 0 && (*words)[i-1][0] == '(' {
-						i--
-					}
-					if i <= 0 {
-						return command.ErrInvalidInput
-					}
-					(*words)[i-1] += s
-					s = ""
-				} else {
-					(*words)[i-1] += s
-					s = ""
-				}
-			}
-		}
 		_, exist = regExp[rune((*words)[i][0])]
 		if exist {
 			if i <= 0 {
@@ -73,11 +48,14 @@ func Check(words *[]string) error {
 
 			// Copy the elements from arr into words at the appropriate position.
 			copy((*words)[i:i+len(arr)], arr)
+			//TODO: return index to the beginning of the array (if it is not sorted yet)
+			//TODO: or return already sorted array
 			i += len(arr) - 1
 		}
 	}
 	if SQuouteCnt%2 != 0 || DQuouteCnt%2 != 0 {
 		return command.ErrInvalidInput
 	}
+	
 	return nil
 }
