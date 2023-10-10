@@ -1,6 +1,7 @@
 package punctuation
 
 import (
+	"fmt"
 	"go-reloaded.aidostt.net/internal/command"
 )
 
@@ -9,7 +10,7 @@ func Check(words *[]string) error {
 		exist                  bool
 		arr                    []string
 		DQuouteCnt, SQuouteCnt int
-		//s                      string
+		s                      string
 	)
 	//TODO: handle advanced commands with punctuation inside and in the end of it
 	//TODO: handle string: something very !(cap, 2)
@@ -39,6 +40,31 @@ func Check(words *[]string) error {
 				i--
 			}
 		}
+		_, exist = regExp[rune((*words)[i][len((*words)[i])-1])]
+		if exist {
+			if i <= 0 {
+				return command.ErrInvalidInput
+			}
+			for exist {
+				s += string(rune((*words)[i][len((*words)[i])-1]))
+				(*words)[i] = (*words)[i][:len((*words)[i])-1]
+				_, exist = regExp[rune((*words)[i][len((*words)[i])-1])]
+			}
+			if (*words)[i-1][0] == '(' {
+				for i >= 0 && (*words)[i-1][0] == '(' {
+					i--
+				}
+				if i <= 0 {
+					return command.ErrInvalidInput
+				}
+				(*words)[i-1] += s
+				s = ""
+			} else {
+				(*words)[i-1] += s
+				s = ""
+			}
+		}
+
 		if arr = delimitWord((*words)[i], &SQuouteCnt, &DQuouteCnt); len(arr) > 1 {
 			// Make room for the new elements by extending the slice.
 			*words = append(*words, make([]string, len(arr)-1)...)
@@ -50,12 +76,13 @@ func Check(words *[]string) error {
 			copy((*words)[i:i+len(arr)], arr)
 			//TODO: return index to the beginning of the array (if it is not sorted yet)
 			//TODO: or return already sorted array
-			i += len(arr) - 1
+			fmt.Println(*words)
+			i += len(arr)
 		}
 	}
 	if SQuouteCnt%2 != 0 || DQuouteCnt%2 != 0 {
 		return command.ErrInvalidInput
 	}
-	
+
 	return nil
 }
