@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	commands        = map[string]bool{"(hex)": false, "(bin)": false, "(up)": false, "(low)": false, "(cap)": false}
+	Сommands        = map[string]bool{"(hex)": false, "(bin)": false, "(up)": false, "(low)": false, "(cap)": false}
 	advCommands     = map[string]bool{"(up,": false, "(low,": false, "(cap,": false}
 	ErrCommNotFound = errors.New("no such command")
 	ErrInvalidInput = errors.New("invalid input")
@@ -43,5 +43,3 @@ func number(s string) (output int, err error) {
 	}
 	return
 }
-
-//TODO: handle multiple commands in a row something (up) (low) (cap)
