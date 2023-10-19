@@ -10,9 +10,10 @@ func Check(words *[]string) error {
 		arr                    []string
 		DQuouteCnt, SQuouteCnt int
 	)
-	//TODO: handle advanced commands with punctuation inside and in the end of it
-	//TODO: handle string: something very !(cap, 2)
+
+	// Loop through the words.
 	for i := 0; i < len(*words); i++ {
+		// Count single and double quotes.
 		if (*words)[i] == "\"" {
 			DQuouteCnt++
 		}
@@ -20,7 +21,10 @@ func Check(words *[]string) error {
 			SQuouteCnt++
 		}
 
+		// Check for existence of the word in the regular expression map.
 		_, exist = regExp[rune((*words)[i][0])]
+
+		// If the word exists, handle it based on the conditions.
 		if exist {
 			if i <= 0 {
 				continue
@@ -39,6 +43,7 @@ func Check(words *[]string) error {
 			}
 		}
 
+		// Call delimitWord function and check its result.
 		if arr = delimitWord((*words)[i], &SQuouteCnt, &DQuouteCnt); len(arr) > 1 {
 			// Make room for the new elements by extending the slice.
 			*words = append(*words, make([]string, len(arr)-1)...)
@@ -51,6 +56,8 @@ func Check(words *[]string) error {
 			i -= 1
 		}
 	}
+
+	// Check if the counts of single and double quotes are even.
 	if SQuouteCnt%2 != 0 || DQuouteCnt%2 != 0 {
 		return command.ErrInvalidInput
 	}

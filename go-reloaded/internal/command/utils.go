@@ -6,12 +6,20 @@ import (
 )
 
 var (
-	Сommands        = map[string]bool{"(hex)": false, "(bin)": false, "(up)": false, "(low)": false, "(cap)": false}
-	advCommands     = map[string]bool{"(up,": false, "(low,": false, "(cap,": false}
+	// Сommands represents a set of valid single-word commands.
+	Сommands = map[string]bool{"(hex)": false, "(bin)": false, "(up)": false, "(low)": false, "(cap)": false}
+
+	// advCommands represents a set of valid multi-word commands.
+	advCommands = map[string]bool{"(up,": false, "(low,": false, "(cap,": false}
+
+	// ErrCommNotFound is returned when a command is not found in the commands map.
 	ErrCommNotFound = errors.New("no such command")
+
+	// ErrInvalidInput is returned when the input is invalid or doesn't meet the expected format.
 	ErrInvalidInput = errors.New("invalid input")
 )
 
+// hex function converts a hexadecimal string to a decimal string.
 func hex(s string) string {
 	n, err := strconv.ParseInt(s, 16, 64)
 	if err != nil {
@@ -20,6 +28,7 @@ func hex(s string) string {
 	return strconv.Itoa(int(n))
 }
 
+// bin function converts a binary string to a decimal string.
 func bin(s string) string {
 	n, err := strconv.ParseInt(s, 2, 64)
 	if err != nil {
@@ -28,14 +37,14 @@ func bin(s string) string {
 	return strconv.Itoa(int(n))
 }
 
+// delAtInd function deletes an element at a specific index in a string slice.
 func delAtInd(s []string, index int) []string {
 	return append((s)[:index], (s)[index+1:]...)
 }
 
+// number function extracts a number from a string formatted as "digit)" and returns it as an integer.
 func number(s string) (output int, err error) {
-	//Since in this function we expect to get the
-	//string in format of "digit)", we need to get
-	//rid of last bracket.
+	// Since this function expects the string in the format "digit)", the last bracket is removed.
 	s = s[:len(s)-1]
 	output, err = strconv.Atoi(s)
 	if err != nil {
