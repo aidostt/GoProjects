@@ -42,15 +42,41 @@ func delimitWord(word string, SCnt *int, DCnt *int) (out []string) {
 			sign = false
 			prevInd = i
 		}
-
 	}
-	return append(out, string(rr[prevInd:]))
+	out = append(out, string(rr[prevInd:]))
+	if len(out) == 1 {
+		return nil
+	} else {
+		for i := 0; i < len(out); i++ {
+			_, exist = regExp[rune(out[i][0])]
+			if exist {
+				if i == 0 {
+					continue
+				}
+				if out[i-1][len(out[i-1])-1] == ')' {
+					j := i - 1
+					for out[j][len(out[j])-1] == ')' {
+						if j <= 0 {
+							break
+						} else {
+							j--
+						}
+					}
+					s := out[j]
+					out[j] = out[i]
+					out = delAtInd(out, i)
+					addWordAtInd(&out, j+1, s)
+				}
+			}
+		}
+	}
+	return out
 }
 
-func addSpaceAtInd(rr *[]rune, i int) {
-	*rr = append(*rr, 0) // Add a new rune to make space.
-	copy((*rr)[i+1:], (*rr)[i:])
-	(*rr)[i] = ' ' // Add a space rune.
+func addWordAtInd(s *[]string, i int, word string) {
+	*s = append(*s, "") // Add a new rune to make space.
+	copy((*s)[i+1:], (*s)[i:])
+	(*s)[i] = word // Add a space rune.
 }
 
 func delAtInd(s []string, index int) []string {
