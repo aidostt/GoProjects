@@ -1,7 +1,5 @@
 package article
 
-import "go-reloaded.aidostt.net/internal/command"
-
 // Define a map that maps vowels and 'h' characters to a space to be used for word transformation.
 var (
 	vowels = map[rune]rune{
@@ -16,8 +14,8 @@ func Check(words []string) ([]string, error) {
 		// Check for the word "a" or "A".
 		if word == "a" || word == "A" {
 			if i+1 > len(words)-1 {
+				continue
 				// If the "a" or "A" is the last word, return an error.
-				return nil, command.ErrInvalidInput
 			}
 			if _, exist := vowels[rune(words[i+1][0])]; exist {
 				// If the next word starts with a vowel or 'h', change "a" to "an" or "A" to "An".
@@ -30,6 +28,10 @@ func Check(words []string) ([]string, error) {
 		}
 		// Check for the word "an" or "An".
 		if word == "an" || word == "An" {
+			if i+1 > len(words)-1 {
+				continue
+				// If the "a" or "A" is the last word, return an error.
+			}
 			if _, exist := vowels[rune(words[i+1][0])]; !exist {
 				// If the next word does not start with a vowel or 'h', change "an" to "a" or "An" to "A".
 				if word == "an" {
