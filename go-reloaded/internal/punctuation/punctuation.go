@@ -6,24 +6,15 @@ import (
 
 func Check(words *[]string) error {
 	var (
-		exist                  bool
-		arr                    []string
-		DQuouteCnt, SQuouteCnt int
+		exist, isQuote       bool
+		arr                  []string
+		DQuoteCnt, SQuoteCnt int
 	)
 
 	// Loop through the words.
 	for i := 0; i < len(*words); i++ {
-		// Count single and double quotes.
-		if (*words)[i] == "\"" {
-			DQuouteCnt++
-		}
-		if (*words)[i] == "'" {
-			SQuouteCnt++
-		}
-
 		// Check for existence of the word in the regular expression map.
 		_, exist = regExp[rune((*words)[i][0])]
-
 		// If the word exists, handle it based on the conditions.
 		if exist {
 			if i <= 0 {
@@ -42,9 +33,48 @@ func Check(words *[]string) error {
 				i--
 			}
 		}
-
+		// Check if the current word exists in the quotes map.
+		_, exist = quotes[((*words)[i])]
+		if exist {
+			if isQuote {
+				// If the previous word starts with an opening bracket, append the current word to it.
+				if (*words)[i-1][0] == '(' {
+					if i-2 < 0 {
+						return command.ErrInvalidInput
+					}
+					(*words)[i-2] += (*words)[i]
+					// Remove the current word from the slice.
+					*words = delAtInd(*words, i)
+					// Update the loop counter.
+					i -= 2
+				} else {
+					// If the previous word doesn't start with an opening bracket, append the current word to it.
+					(*words)[i-1] += (*words)[i]
+					// Remove the current word from the slice.
+					*words = delAtInd(*words, i)
+					// Update the loop counter.
+					i--
+				}
+				isQuote = false
+			} else {
+				if i+1 >= len(*words) {
+					return command.ErrInvalidInput
+				}
+				if (*words)[i+1][0] == '(' {
+					if i+2 >= len(*words) {
+						return command.ErrInvalidInput
+					}
+					(*words)[i+2] = (*words)[i] + (*words)[i+2]
+					*words = delAtInd(*words, i)
+				} else {
+					(*words)[i+1] = (*words)[i] + (*words)[i+1]
+					*words = delAtInd(*words, i)
+				}
+				isQuote = true
+			}
+		}
 		// Call delimitWord function and check its result.
-		if arr = delimitWord((*words)[i], &SQuouteCnt, &DQuouteCnt); len(arr) > 1 {
+		if arr = delimitWord((*words)[i], &isQuote); len(arr) > 1 {
 			// Make room for the new elements by extending the slice.
 			*words = append(*words, make([]string, len(arr)-1)...)
 
@@ -56,11 +86,22 @@ func Check(words *[]string) error {
 			i -= 1
 		}
 	}
-
+	for i := 0; i < len(*words); i++ {
+		_, exist = quotes[string((*words)[i][0])]
+		if exist {
+			for j := 0; j < len((*words)[i]); j++ {
+				if (*words)[i] == "'" {
+					SQuoteCnt++
+				}
+				if (*words)[i] == "\"" {
+					DQuoteCnt++
+				}
+			}
+		}
+	}
 	// Check if the counts of single and double quotes are even.
-	if SQuouteCnt%2 != 0 || DQuouteCnt%2 != 0 {
+	if SQuoteCnt%2 != 0 || DQuoteCnt%2 != 0 {
 		return command.ErrInvalidInput
 	}
-
 	return nil
 }

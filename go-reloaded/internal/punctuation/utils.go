@@ -7,27 +7,33 @@ import (
 // regExp defines a map of punctuation runes to be replaced with spaces.
 var regExp = map[rune]rune{
 	'!': ' ', '?': ' ', '.': ' ', ',': ' ',
-	':': ' ', ';': ' ', '"': ' ', '\'': ' ',
+	':': ' ', ';': ' ',
+}
+
+var quotes = map[string]rune{
+	//"(": ' ', ")": ' ',
+	"\"": ' ', "'": ' ',
 }
 
 // delimitWord function splits a word based on punctuation rules.
 // It replaces punctuation with spaces and handles single and double quotes.
-func delimitWord(word string, SCnt *int, DCnt *int) (out []string) {
+func delimitWord(word string, isQuote *bool) (out []string) {
 	var (
 		exist, sign, bracket bool
+		sQuoteCnt, dQuoteCnt int
 	)
 	prevInd := 0
 	rr := []rune(strings.TrimSpace(word))
 
 	for i := 0; i < len(rr); i++ {
-		// Count single and double quotes.
-		if rr[i] == '\'' {
-			*SCnt++
+		_, exist = quotes[string(rr[i])]
+		if exist {
+			if rr[i] == '\'' {
+				sQuoteCnt++
+			} else {
+				dQuoteCnt++
+			}
 		}
-		if rr[i] == '"' {
-			*DCnt++
-		}
-
 		_, exist = regExp[rr[i]]
 		if exist {
 			sign = true
@@ -79,6 +85,9 @@ func delimitWord(word string, SCnt *int, DCnt *int) (out []string) {
 				}
 			}
 		}
+	}
+	if sQuoteCnt%2 != 0 || dQuoteCnt%2 != 0 {
+		*isQuote = true
 	}
 	return out
 }
