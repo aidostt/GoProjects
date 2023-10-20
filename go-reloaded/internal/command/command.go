@@ -11,6 +11,9 @@ func Check(words *[]string) error {
 	// First loop: Process single-word commands.
 	for i := 0; i < len(*words); i++ {
 		if _, exist = Сommands[(*words)[i]]; exist {
+			if i == 0 {
+				return ErrInvalidInput
+			}
 			switch (*words)[i] {
 			case "(hex)":
 				(*words)[i-1] = hex((*words)[i-1]) // Apply hex transformation to the preceding word.
@@ -68,3 +71,6 @@ func Check(words *[]string) error {
 	}
 	return nil
 }
+
+//TODO: avoid applying commands on quotes and signs
+//TODO: (((A (hex)))) --> (((10)))
