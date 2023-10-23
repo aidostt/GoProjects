@@ -2,7 +2,10 @@ package command
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -19,22 +22,72 @@ var (
 	ErrInvalidInput = errors.New("invalid input")
 )
 
-// hex function converts a hexadecimal string to a decimal string.
-func hex(s string) string {
-	n, err := strconv.ParseInt(s, 16, 64)
-	if err != nil {
-		return ""
+var quotes = map[string]rune{
+	"(": ' ', ")": ' ',
+	"\"": ' ', "'": ' ',
+}
+
+func containsCommand(word string) bool {
+	for i := 0; i < len(word); i++ {
+		for command := range Сommands {
+			if i+len(command) <= len(word) && word[i:i+len(command)] == command {
+				return true
+			}
+		}
 	}
-	return strconv.Itoa(int(n))
+	return false
+}
+
+func hexToDec(hexStr string) string {
+	dec, err := strconv.ParseInt(hexStr, 16, 64)
+	if err != nil {
+		return hexStr // Return the original string if conversion fails.
+	}
+	return fmt.Sprintf("%d", dec)
+}
+
+// hex function converts a hexadecimal string to a decimal string.
+func hex(input string) string {
+	re := regexp.MustCompile(`[0-9A-Fa-f]+`) // Regular expression to find hexadecimal sequences.
+	hexStrings := re.FindAllString(input, -1)
+	fmt.Println(input)
+	if hexStrings == nil {
+		return input // No hex sequences found, return the original string.
+	}
+
+	// Replace each hexadecimal string with its decimal equivalent.
+	for _, hexStr := range hexStrings {
+		decStr := hexToDec(hexStr)
+		input = strings.Replace(input, hexStr, decStr, 1)
+	}
+
+	return input
+}
+
+func binToDec(binStr string) string {
+	dec, err := strconv.ParseInt(binStr, 2, 64)
+	if err != nil {
+		return binStr // Return the original string if conversion fails.
+	}
+	return fmt.Sprintf("%d", dec)
 }
 
 // bin function converts a binary string to a decimal string.
-func bin(s string) string {
-	n, err := strconv.ParseInt(s, 2, 64)
-	if err != nil {
-		return ""
+func bin(input string) string {
+	re := regexp.MustCompile(`[01]+`) // Regular expression to find binary sequences.
+	binStrings := re.FindAllString(input, -1)
+
+	if binStrings == nil {
+		return input // No binary sequences found, return the original string.
 	}
-	return strconv.Itoa(int(n))
+
+	// Replace each binary string with its decimal equivalent.
+	for _, binStr := range binStrings {
+		decStr := binToDec(binStr)
+		input = strings.Replace(input, binStr, decStr, 1)
+	}
+
+	return input
 }
 
 // delAtInd function deletes an element at a specific index in a string slice.

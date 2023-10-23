@@ -7,13 +7,19 @@ import (
 // Check function processes an array of strings containing commands and modifies the words based on those commands.
 func Check(words *[]string) error {
 	var exist bool
-
 	// First loop: Process single-word commands.
 	for i := 0; i < len(*words); i++ {
 		if _, exist = Сommands[(*words)[i]]; exist {
 			if i == 0 {
 				return ErrInvalidInput
 			}
+			//j := i - 1
+			//if _, exist = quotes[(*words)[j]]; exist {
+			//	for exist && j > 0 {
+			//		j--
+			//		_, exist = quotes[(*words)[j]]
+			//	}
+			//}
 			switch (*words)[i] {
 			case "(hex)":
 				(*words)[i-1] = hex((*words)[i-1]) // Apply hex transformation to the preceding word.
