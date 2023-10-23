@@ -81,8 +81,13 @@ func copyDataFrom(destFile *os.File) ([]string, error) {
 }
 
 func deleteNilVal(s []string) []string {
-	for len(s) > 0 && s[0] == "" {
-		s = append((s)[:0], (s)[+1:]...)
+	count := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] != "" {
+			s[count] = s[i] // Shift non-empty element to the beginning
+			count++
+		}
 	}
-	return s
+
+	return s[:count]
 }

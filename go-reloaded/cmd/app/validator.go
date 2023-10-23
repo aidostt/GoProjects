@@ -10,14 +10,15 @@ import (
 func validate(srcData []string) (output []byte, err error) {
 	srcData = deleteNilVal(srcData)
 	data, err := article.Check(srcData)
+	if err != nil {
+		return
+	}
 	err = punctuation.Check(&data)
 	if err != nil {
-		//TODO: add error handling
 		return
 	}
 	err = command.Check(&data)
 	if err != nil {
-		//TODO: add error handling
 		return
 	}
 	return []byte(strings.Join(data, " ")), err
