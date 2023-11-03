@@ -2,7 +2,10 @@ package main
 
 import (
 	"aidostt.ascii-art/pkg"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"os"
 	"unicode"
 )
@@ -24,21 +27,26 @@ func validateInput(s string) error {
 }
 
 func validateFiles() error {
-	var fonts map[string]font
-	//fill the map with libraries
-	//make a loop that will iterate through fonts map, hash each data and compare them with right ones
-	file, err := file(fonts["standard"].path)
-	defer file.Close()
-	if err != nil {
-		return err
+	fonts := map[string]font{
+		"shadow":     {hash: "4d08f833a298632f3b197597c639dd1a", path: "..\\..\\pkg\\shadow.txt"},
+		"standard":   {hash: "3eaca20016ebc5d69e861c786d22cf94", path: "..\\..\\pkg\\standard.txt"},
+		"thinkertoy": {hash: "00d3accd1753b34bd5fba483cb2b8383", path: "..\\..\\pkg\\thinkertoy.txt"},
 	}
-	str, err := fileData(file)
-	hashed, err := hash(str)
-	if err != nil {
-		return err
+	for name, info := range fonts {
+		file, err := file(info.path)
+		defer file.Close()
+		if err != nil {
+			return err
+		}
+		data, err := fileData(file)
+		hashed := md5Hash(data)
+		if err != nil {
+			return err
+		}
+		if hashed != info.hash {
+			return errors.New(fmt.Sprintf("font file %v has been overwritten or corrupted", name))
+		}
 	}
-	//convert to hash variables
-	//compare them
 	return nil
 }
 
@@ -57,7 +65,7 @@ func file(dir string) (*os.File, error) {
 		return nil, err
 	}
 	if !exist {
-		return nil, ErrFileNotFound
+		return nil, errors.New("file not found")
 	}
 	file, err := os.OpenFile(dir, os.O_RDWR, 0777)
 	if err != nil {
@@ -77,6 +85,7 @@ func exist(FileName string) (bool, error) {
 	return true, nil
 }
 
-func hash(data string) (out string, err error) {
-
+func md5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
 }

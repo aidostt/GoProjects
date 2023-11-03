@@ -16,10 +16,12 @@ func main() {
 	err := validateInput(arg)
 	if err != nil {
 		fmt.Errorf("Occured error: %v", pkg.ErrInvalidInput)
+		return
 	}
 	err = validateFiles()
-	in err != nil {
-
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
 	//validate input
 	//validate ascii alphabet files
