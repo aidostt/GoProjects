@@ -1,4 +1,4 @@
 package pkg
 
 var ErrInvalidInput = "invalid Input"
-var ErrLibrary = "source file has been modified or corrupted"
+var ErrLibrary = "source File has been modified or corrupted"
