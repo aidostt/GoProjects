@@ -2,6 +2,7 @@ package internal
 
 import (
 	"aidostt.ascii-art/pkg"
+	"strings"
 )
 
 var ConstPath = "..\\..\\pkg\\"
@@ -14,6 +15,7 @@ func Alphabet(fontPath string) (map[rune]string, error) {
 		return nil, err
 	}
 	data, err := pkg.FileData(file)
+	data = strings.ReplaceAll(data, "\r", "")
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +43,6 @@ func Alphabet(fontPath string) (map[rune]string, error) {
 
 func FormatOutput(alph map[rune]string, s string) string {
 	out := ""
-	//sample
 	for i := 1; i <= 8; i++ {
 		for _, letter := range s {
 			newLineCounter, prevInd := 0, 0
