@@ -3,32 +3,50 @@ package main
 import (
 	"aidostt.ascii-art/internal"
 	"aidostt.ascii-art/pkg"
+	"flag"
 	"fmt"
-	"os"
 )
 
 func main() {
-	if len(os.Args[1:]) > 2 {
-		//TODO: add logger with error handling
+	var (
+		color, align, reverse, output string
+	)
+	flag.StringVar(&output, "output", "", "file name for writing results in it")
+	flag.StringVar(&reverse, "reverse", "", "file name for taking data to reverse")
+	flag.StringVar(&align, "align", "left", "justify text")
+	flag.StringVar(&color, "color", "", "letter color")
+	flag.Parse()
+	args := flag.Args()
+	flags := map[string]string{
+		"output":  output,
+		"reverse": reverse,
+		"align":   align,
+		"color":   color,
+	}
+	input, lettersToColorize, desiredFont, err := assignArgs(args)
+	if err != nil {
 		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
+		fmt.Println(err)
 		return
 	}
-	font := STANDARD
-	if len(os.Args[1:]) == 2 {
-		font = os.Args[2]
+	fmt.Println(lettersToColorize)
+	err = validator(input, desiredFont, flags)
+	if err != nil {
+		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
+		fmt.Println(err)
+		return
 	}
 
-	err := validator(os.Args[1], font)
-	if err != nil {
-		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
-		fmt.Println(err)
-		return
-	}
-	alphabet, err := internal.Alphabet(font)
+	//TODO:implement the colors
+
+	alphabet, err := internal.Alphabet(desiredFont)
+
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	out := internal.FormatOutput(alphabet, os.Args[1])
+	//TODO:implement the justify
+	out := internal.FormatOutput(alphabet, input)
+	//TODO:implement the output
 	fmt.Println(out)
 }
