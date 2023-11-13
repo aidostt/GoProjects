@@ -78,7 +78,7 @@ func validateInput(input, desiredFont string, flags map[string]string) error {
 
 	switch desiredFont {
 	case SHADOW, THINKERTOY, STANDARD, "":
-		return nil
+		break
 	default:
 		return errors.New(pkg.ErrInvalidInput)
 	}
