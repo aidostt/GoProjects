@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
+	"io"
 	"os"
 )
 
@@ -45,4 +46,24 @@ func Exist(FileName string) (bool, error) {
 func Md5Hash(text string) string {
 	hash := md5.Sum([]byte(text))
 	return hex.EncodeToString(hash[:])
+}
+
+func PrintFile(file *os.File, data string) error {
+	err := file.Truncate(0)
+	if err != nil {
+		return err
+	}
+
+	// Rewind the file cursor to the beginning
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		return err
+	}
+
+	// Write the data to the destination file
+	_, err = file.Write([]byte(data))
+	if err != nil {
+		return err
+	}
+	return nil
 }

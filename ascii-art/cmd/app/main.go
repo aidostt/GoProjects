@@ -29,7 +29,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(lettersToColorize)
 	err = validator(input, desiredFont, flags)
 	if err != nil {
 		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
@@ -39,14 +38,30 @@ func main() {
 
 	//TODO:implement the colors
 
-	alphabet, err := internal.Alphabet(desiredFont)
+	alphabet, err := internal.Alphabet(desiredFont, lettersToColorize)
 
 	if err != nil {
+		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
 		fmt.Println(err)
 		return
 	}
 	//TODO:implement the justify
 	out := internal.FormatOutput(alphabet, input)
-	//TODO:implement the output
-	fmt.Println(out)
+	if output != "" {
+		file, err := pkg.File(output)
+		defer file.Close()
+		if err != nil {
+			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
+			fmt.Println(err)
+			return
+		}
+		err = pkg.PrintFile(file, out)
+		if err != nil {
+			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
+			fmt.Println(err)
+			return
+		}
+	} else {
+		fmt.Println(out)
+	}
 }
