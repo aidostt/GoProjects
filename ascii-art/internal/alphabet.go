@@ -7,7 +7,7 @@ import (
 
 var ConstPath = "..\\..\\pkg\\"
 
-func Alphabet(fontPath string) (map[rune]string, error) {
+func Alphabet(fontPath, lToClrz string) (map[rune]string, error) {
 	fontPath += ".txt"
 	file, err := pkg.File(ConstPath + fontPath)
 	defer file.Close()

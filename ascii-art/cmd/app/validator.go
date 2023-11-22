@@ -34,8 +34,8 @@ func validateFlags(flags map[string]string) error {
 		ok  bool
 		err error
 	)
-	if flags["output"] != "" {
-		ok, err = pkg.Exist(flags["output"])
+	if flags["outputFLag"] != "" {
+		ok, err = pkg.Exist(flags["outputFlag"])
 		if err != nil {
 			return err
 		}
@@ -43,8 +43,8 @@ func validateFlags(flags map[string]string) error {
 			return errors.New("required file to output doesn't exists")
 		}
 	}
-	if flags["reverse"] != "" {
-		ok, err = pkg.Exist(flags["reverse"])
+	if flags["reverseFlag"] != "" {
+		ok, err = pkg.Exist(flags["reverseFlag"])
 		if err != nil {
 			return err
 		}
@@ -53,8 +53,8 @@ func validateFlags(flags map[string]string) error {
 		}
 	}
 
-	switch flags["align"] {
-	case "center", "left", "right", "justify":
+	switch flags["alignFlag"] {
+	case "center", "left", "right", "justify", "":
 		break
 	default:
 		return errors.New("invalid align type")
