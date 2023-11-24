@@ -4,6 +4,7 @@ import (
 	"aidostt.ascii-art/pkg"
 	"errors"
 	"fmt"
+	"strings"
 	"unicode"
 )
 
@@ -34,8 +35,8 @@ func validateFlags(flags map[string]string) error {
 		ok  bool
 		err error
 	)
-	if flags["outputFLag"] != "" {
-		ok, err = pkg.Exist(flags["outputFlag"])
+	if flags["output"] != "" {
+		ok, err = pkg.Exist(flags["output"])
 		if err != nil {
 			return err
 		}
@@ -43,8 +44,8 @@ func validateFlags(flags map[string]string) error {
 			return errors.New("required file to output doesn't exists")
 		}
 	}
-	if flags["reverseFlag"] != "" {
-		ok, err = pkg.Exist(flags["reverseFlag"])
+	if flags["reverse"] != "" {
+		ok, err = pkg.Exist(flags["reverse"])
 		if err != nil {
 			return err
 		}
@@ -53,13 +54,19 @@ func validateFlags(flags map[string]string) error {
 		}
 	}
 
-	switch flags["alignFlag"] {
+	switch flags["align"] {
 	case "center", "left", "right", "justify", "":
 		break
 	default:
 		return errors.New("invalid align type")
 	}
 
+	switch strings.ToLower(flags["color"]) {
+	case "red", "green", "yellow", "blue", "purple", "cyan", "grey", "white":
+		break
+	default:
+		return errors.New("invalid color type")
+	}
 	//TODO: validate color flag
 	return nil
 }

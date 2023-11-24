@@ -7,7 +7,7 @@ import (
 func assignArgs(args []string) (input, lToColorize, desiredFont string, err error) {
 	switch len(args) {
 	case 1:
-		input, desiredFont = args[0], STANDARD
+		input, lToColorize, desiredFont = args[0], args[0], STANDARD
 	case 2:
 		if args[1] == STANDARD || args[1] == SHADOW || args[1] == THINKERTOY {
 			lToColorize, input, desiredFont = args[0], args[0], args[1]

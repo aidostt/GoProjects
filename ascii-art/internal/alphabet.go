@@ -7,7 +7,7 @@ import (
 
 var ConstPath = "..\\..\\pkg\\"
 
-func Alphabet(fontPath, lToClrz string) (map[rune]string, error) {
+func Alphabet(fontPath string) (map[rune]string, error) {
 	fontPath += ".txt"
 	file, err := pkg.File(ConstPath + fontPath)
 	defer file.Close()
@@ -42,6 +42,7 @@ func Alphabet(fontPath, lToClrz string) (map[rune]string, error) {
 }
 
 func FormatOutput(alph map[rune]string, s string) string {
+	//TODO:fix the colorize logic. When you trying to specify 1 letter to be colorized, function colorizes full word
 	out := ""
 	for i := 1; i <= 8; i++ {
 		for _, letter := range s {

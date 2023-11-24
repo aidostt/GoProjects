@@ -18,10 +18,10 @@ func main() {
 	flag.Parse()
 	args := flag.Args()
 	flags := map[string]string{
-		"outputFlag":  outputFlag,
-		"reverseFlag": reverseFlag,
-		"alignFlag":   alignFlag,
-		"colorFlag":   colorFlag,
+		"output":  outputFlag,
+		"reverse": reverseFlag,
+		"align":   alignFlag,
+		"color":   colorFlag,
 	}
 	input, lettersToColorize, desiredFont, err := assignArgs(args)
 	if err != nil {
@@ -35,21 +35,26 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-
-	//TODO:implement the colors
-
-	alphabet, err := internal.Alphabet(desiredFont, lettersToColorize)
+	alphabet, err := internal.Alphabet(desiredFont)
 
 	if err != nil {
 		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
 		fmt.Println(err)
 		return
 	}
+	if flags["color"] != "" {
+		alphabet, err = internal.Colorize(alphabet, lettersToColorize, flags["color"])
+		if err != nil {
+			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
+			fmt.Println(err)
+			return
+		}
+	}
 	output := internal.FormatOutput(alphabet, input)
 
 	//TODO:implement the justify
-	if flags["alignFlag"] != "" {
-		output, err = internal.Justify(flags["alignFlag"], output)
+	if flags["align"] != "" {
+		output, err = internal.Justify(flags["align"], output)
 		if err != nil {
 			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
 			fmt.Println(err)
@@ -57,8 +62,8 @@ func main() {
 		}
 	}
 
-	if flags["outputFlag"] != "" {
-		file, err := pkg.File(flags["outputFlag"])
+	if flags["output"] != "" {
+		file, err := pkg.File(flags["output"])
 		defer file.Close()
 		if err != nil {
 			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
