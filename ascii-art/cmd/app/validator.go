@@ -62,7 +62,7 @@ func validateFlags(flags map[string]string) error {
 	}
 
 	switch strings.ToLower(flags["color"]) {
-	case "red", "green", "yellow", "blue", "purple", "cyan", "grey", "white":
+	case "red", "green", "yellow", "blue", "purple", "cyan", "grey", "white", "":
 		break
 	default:
 		return errors.New("invalid color type")

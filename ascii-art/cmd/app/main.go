@@ -5,6 +5,7 @@ import (
 	"aidostt.ascii-art/pkg"
 	"flag"
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -42,15 +43,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	if flags["color"] != "" {
-		alphabet, err = internal.Colorize(alphabet, lettersToColorize, flags["color"])
-		if err != nil {
-			fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
-			fmt.Println(err)
-			return
-		}
-	}
-	output := internal.FormatOutput(alphabet, input)
+	output := internal.FormatOutput(alphabet, input, lettersToColorize, strings.ToLower(flags["color"]))
 
 	//TODO:implement the justify
 	if flags["align"] != "" {
