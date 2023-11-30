@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -12,35 +13,34 @@ func Justify(justification string, text string) (string, error) {
 	}
 	lines := strings.Split(text, "\n")
 	var justifiedLines []string
-
 	// Process each line separately
 	for _, line := range lines {
-		justifiedLine, ok := justifyText(line, width, justification)
-		if !ok {
-			return "", errors.New("invalid align option")
+		spacesToAdd := width - len(line)
+		fmt.Println(spacesToAdd)
+		if spacesToAdd < 0 {
+			return "", errors.New("input is too long to be justified")
+		}
+		justifiedLine, err := justifyText(line, spacesToAdd, width, justification)
+		if err != nil {
+			return "", err
 		}
 		justifiedLines = append(justifiedLines, justifiedLine)
 	}
-
 	// Join the lines with spaces and return
 	return strings.Join(justifiedLines, "\n"), nil
 }
 
-func justifyText(text string, width int, justification string) (string, bool) {
-	// Calculate the number of spaces to add for justification
-	spacesToAdd := width - len(text)
-
-	// Handle different justification options
+func justifyText(text string, spacesToAdd, width int, justification string) (string, error) {
 	switch justification {
 	case "left":
-		return text + strings.Repeat(" ", spacesToAdd), true
+		return text + strings.Repeat(" ", spacesToAdd), nil
 	case "right":
-		return strings.Repeat(" ", spacesToAdd) + text, true
+		return strings.Repeat(" ", spacesToAdd) + text, nil
 	case "center":
 		leftSpaces := spacesToAdd / 2
 		rightSpaces := spacesToAdd - leftSpaces
-		return strings.Repeat(" ", leftSpaces) + text + strings.Repeat(" ", rightSpaces), true
+		return strings.Repeat(" ", leftSpaces) + text + strings.Repeat(" ", rightSpaces), nil
 	default:
-		return "", false
+		return "", errors.New("invalid align type")
 	}
 }

@@ -41,32 +41,6 @@ func Alphabet(fontPath string) (map[rune]string, error) {
 	return alphabet, nil
 }
 
-//
-//func FormatOutput(alph map[rune]string, s, lToClrz string) string {
-//	//TODO:fix the colorize logic. When you trying to specify 1 letter to be colorized, function colorizes full word
-//	out := ""
-//	for i := 1; i <= 8; i++ {
-//		for _, letter := range s {
-//			newLineCounter, prevInd := 0, 0
-//			for j, element := range alph[letter] {
-//				if element == '\n' {
-//					newLineCounter++
-//					if newLineCounter == i {
-//						if prevInd != 0 {
-//							out += alph[letter][prevInd+1 : j]
-//						} else {
-//							out += alph[letter][:j]
-//						}
-//					}
-//					prevInd = j
-//				}
-//			}
-//		}
-//		out += "\n"
-//	}
-//	return out
-//}
-
 func FormatOutput(alph map[rune]string, s, lToClrz, color string) string {
 	out := ""
 	for i := 1; i <= 8; i++ {

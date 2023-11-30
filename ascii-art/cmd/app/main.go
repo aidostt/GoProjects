@@ -26,6 +26,7 @@ func main() {
 	}
 	input, lettersToColorize, desiredFont, err := assignArgs(args)
 	if err != nil {
+
 		fmt.Printf("Occured error: %v\n", pkg.ErrInvalidInput)
 		fmt.Println(err)
 		return
@@ -44,8 +45,6 @@ func main() {
 		return
 	}
 	output := internal.FormatOutput(alphabet, input, lettersToColorize, strings.ToLower(flags["color"]))
-
-	//TODO:implement the justify
 	if flags["align"] != "" {
 		output, err = internal.Justify(flags["align"], output)
 		if err != nil {
@@ -54,7 +53,6 @@ func main() {
 			return
 		}
 	}
-
 	if flags["output"] != "" {
 		file, err := pkg.File(flags["output"])
 		defer file.Close()
