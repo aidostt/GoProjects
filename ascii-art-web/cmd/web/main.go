@@ -2,14 +2,18 @@ package main
 
 import (
 	"flag"
+	"github.com/go-playground/form/v4"
+	"html/template"
 	"log"
 	"os"
 )
 
 type application struct {
-	config   config
-	infoLog  *log.Logger
-	errorLog *log.Logger
+	config        config
+	infoLog       *log.Logger
+	errorLog      *log.Logger
+	templateCache map[string]*template.Template
+	formDecoder   *form.Decoder
 }
 
 type config struct {
@@ -24,12 +28,19 @@ func main() {
 	flag.Parse()
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-	app := &application{
-		config:   cfg,
-		infoLog:  infoLog,
-		errorLog: errorLog,
+	templateCache, err := NewTemplateCache()
+	formDecoder := form.NewDecoder()
+	if err != nil {
+		errorLog.Fatal(err)
 	}
-	err := app.serve()
+	app := &application{
+		config:        cfg,
+		infoLog:       infoLog,
+		errorLog:      errorLog,
+		templateCache: templateCache,
+		formDecoder:   formDecoder,
+	}
+	err = app.serve()
 	if err != nil {
 		errorLog.Println(err)
 		return
