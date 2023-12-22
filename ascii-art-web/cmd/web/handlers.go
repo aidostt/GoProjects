@@ -2,6 +2,7 @@ package main
 
 import (
 	"ascii-art-web.aidostt.net/internal"
+	"fmt"
 	"net/http"
 )
 
@@ -35,7 +36,11 @@ func (app *application) PostFormHandler(w http.ResponseWriter, r *http.Request) 
 		app.clientError(w, http.StatusBadRequest)
 	}
 	output := internal.FormatOutput(alphabet, form.Input)
-	//TODO: pass it using html templates
+	fmt.Println(output)
 	app.render(w, http.StatusOK, "view.tmpl", output)
+
+}
+
+func (app *application) ExportFileHandler(w http.ResponseWriter, r *http.Request) {
 
 }

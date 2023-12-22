@@ -43,7 +43,7 @@ func Alphabet(fontPath string) (map[rune]string, error) {
 
 func FormatOutput(alph map[rune]string, s string) string {
 	out := ""
-	for i := 1; i <= 8; i++ {
+	for i := 0; i <= 8; i++ {
 		for _, letter := range s {
 			newLineCounter, prevInd := 0, 0
 			for j, element := range alph[letter] {
