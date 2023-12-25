@@ -13,7 +13,7 @@ func (app *application) routes() http.Handler {
 
 	//TODO:Implement notFound and methodNotAllowed http responses and assign them to the router functions
 	router.HandlerFunc(http.MethodGet, "/", app.home)
-	router.HandlerFunc(http.MethodPost, "/ascii-art", app.PostFormHandler)
-	router.HandlerFunc(http.MethodGet, "/export", app.ExportFileHandler)
+	router.HandlerFunc(http.MethodPost, "/ascii-art", app.postHandler)
+	router.HandlerFunc(http.MethodPost, "/export", app.exportHandler)
 	return router
 }

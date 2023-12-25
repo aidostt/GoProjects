@@ -20,7 +20,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	//TODO:decode the form into variables
 
 }
-func (app *application) PostFormHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	var form asciiForm
 	err := app.decodePostForm(r, &form)
 	if err != nil {
@@ -36,11 +36,26 @@ func (app *application) PostFormHandler(w http.ResponseWriter, r *http.Request) 
 		app.clientError(w, http.StatusBadRequest)
 	}
 	output := internal.FormatOutput(alphabet, form.Input)
-	fmt.Println(output)
 	app.render(w, http.StatusOK, "view.tmpl", output)
 
 }
 
-func (app *application) ExportFileHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) exportHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
+	// Retrieve the data from the form
+	data := r.FormValue("data")
+	w.Header().Set("Content-Disposition", "attachment; filename=\"ascii-art output.txt\"")
+	w.Header().Set("Content-Type", "text/plain")
+
+	// Write the data to the response
+	fmt.Fprint(w, data)
 }

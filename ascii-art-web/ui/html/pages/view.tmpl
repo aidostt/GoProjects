@@ -4,4 +4,10 @@
     <pre>
         {{.}}
     </pre>
+
+     <form action="/export" method="post">
+         <input type="hidden" name="data" value="{{.}}">
+
+         <button type="submit">Export Your Output</button>
+     </form>
 {{end}}
