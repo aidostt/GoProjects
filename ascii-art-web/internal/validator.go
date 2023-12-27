@@ -79,7 +79,7 @@ func validateInput(input, desiredFont string, flags map[string]string) error {
 
 	for _, el := range input {
 		if el < 32 || el > unicode.MaxASCII {
-			return errors.New(pkg.ErrInvalidInput)
+			return errors.New("invalid input")
 		}
 	}
 
@@ -87,7 +87,7 @@ func validateInput(input, desiredFont string, flags map[string]string) error {
 	case SHADOW, THINKERTOY, STANDARD, "":
 		break
 	default:
-		return errors.New(pkg.ErrInvalidInput)
+		return errors.New("invalid input")
 	}
 	return nil
 }

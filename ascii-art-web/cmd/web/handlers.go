@@ -24,16 +24,16 @@ func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	var form asciiForm
 	err := app.decodePostForm(r, &form)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		app.serverErrorResponse(w, r, err)
 	}
 	//TODO: add limiter for the length of the input
 	err = internal.Validator(form.Input, form.Font, nil)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		app.badRequestResponse(w, r, err)
 	}
 	alphabet, err := internal.Alphabet(form.Font)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		app.serverErrorResponse(w, r, err)
 	}
 	output := internal.FormatOutput(alphabet, form.Input)
 	app.render(w, http.StatusOK, "view.tmpl", output)
@@ -42,15 +42,14 @@ func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) exportHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		app.clientError(w, http.StatusBadRequest)
+		app.methodNotAllowedResponse(w, r)
 		return
 	}
 	err := r.ParseForm()
 	if err != nil {
-		app.serverError(w, err)
+		app.serverErrorResponse(w, r, err)
 		return
 	}
-
 	// Retrieve the data from the form
 	data := r.FormValue("data")
 	w.Header().Set("Content-Disposition", "attachment; filename=\"ascii-art output.txt\"")

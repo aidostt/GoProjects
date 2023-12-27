@@ -3,20 +3,30 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"runtime/debug"
 )
 
-func (app *application) serverError(w http.ResponseWriter, err error) {
-	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
-	app.errorLog.Output(2, trace)
-
-	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, status int, message any) {
+	app.errorLog.Println(status)
+	app.errorLog.Println(message)
+	app.render(w, status, "error.tmpl", message)
 }
 
-func (app *application) clientError(w http.ResponseWriter, status int) {
-	http.Error(w, http.StatusText(status), status)
+func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.errorLog.Println(err)
+	message := "the server encountered a problem and could not process your request"
+	app.errorResponse(w, r, http.StatusInternalServerError, message)
 }
 
-func (app *application) notFound(w http.ResponseWriter) {
-	app.clientError(w, http.StatusNotFound)
+func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request) {
+	message := "the requested resource could not be found"
+	app.errorResponse(w, r, http.StatusNotFound, message)
+}
+
+func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
+	message := fmt.Sprintf("the %s method is not supported for this resource", r.Method)
+	app.errorResponse(w, r, http.StatusMethodNotAllowed, message)
+}
+
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }
