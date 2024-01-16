@@ -1,0 +1,10 @@
+.container-sm {
+    justify-content: center;
+    max-width: 1600px;
+    padding-left: 50px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 100%;
+}

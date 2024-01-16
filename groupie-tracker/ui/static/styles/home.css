@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1600px;
+}
+
+.container-sm {
+    justify-content: center;
+    max-width: 1600px;
+    padding-left: 50px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 100%;
+}
+
+.group {
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    max-width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.group img {
+    max-width: 25   0px;
+    border-radius: 10px;
+}
+
+.groupImage {
+    --s: 250px;   /* the size of the image */
+    --b: 8px;     /* the border thickness*/
+    --g: 14px;    /* the gap */
+    --c: #ffff; /* the color */
+
+    width: var(--s);
+    aspect-ratio: 1;
+    outline: calc(var(--s)/2) solid #0009;
+    outline-offset: calc(var(--s)/-2);
+    cursor: pointer;
+    transition: .3s;
+}
+.groupImage:hover {
+    outline: var(--b) solid var(--c);
+    outline-offset: var(--g);
+}
